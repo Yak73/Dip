@@ -59,7 +59,7 @@ def detection(img, haar_sign_img):
         print("ERROR: SIZES NOT EQUAL")
         raise IndexError
 
-    threshold = 45 * haar_sign_img.shape[0] * haar_sign_img.shape[1] / 255
+    threshold = 42 * haar_sign_img.shape[0] * haar_sign_img.shape[1] / 255
     light, dark = 0, 0
     for x in range(img.shape[0]):
         for y in range(img.shape[1]):
@@ -91,8 +91,9 @@ def show_zone(img, c_img, coord, size):
 if __name__ == '__main__':
 
     car_dataset = create_dataset()
-    haar_sign = create_haar_sign(w1=4, w2=2, w3=24, h=4, alpha=20, show_bit=0)
+    haar_sign = create_haar_sign(w1=4, w2=2, w3=24, h=4, alpha=19, show_bit=0)
 
     for n, image in enumerate(car_dataset):
         coordinates, value = pruning(image[1], haar_sign)
+        print(coordinates, value)
         show_zone(image[0], image[1], coordinates, haar_sign.shape)
