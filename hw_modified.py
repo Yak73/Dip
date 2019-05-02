@@ -18,6 +18,10 @@ p0 = cv.goodFeaturesToTrack(old_gray, mask=None, **feature_params)
 
 save_point = []
 cntr = 0
+
+fourcc = cv.VideoWriter_fourcc(*'MJPG')
+out = cv.VideoWriter('output_modified.avi', fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
+
 while 1:
     ret, frame = cap.read()
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -64,6 +68,9 @@ while 1:
         print(a, b)
         frame = cv.circle(frame, (int(a), int(b)), 4, (0, 255, 0), -1)
     cv.imshow('frame', frame)
+    if ret:
+        frame = cv.flip(frame, 0)
+        out.write(frame)
     k = cv.waitKey(30) & 0xff
     if k == 27:
         break
@@ -73,4 +80,5 @@ while 1:
     cntr += 1
 k = cv.waitKey(0)
 cv.destroyAllWindows()
+out.release()
 cap.release()

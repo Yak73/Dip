@@ -15,6 +15,10 @@ lk_params = dict(winSize=(5, 5),
 ret, old_frame = cap.read()
 old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
 p0 = cv.goodFeaturesToTrack(old_gray, mask=None, **feature_params)
+
+fourcc = cv.VideoWriter_fourcc(*'MJPG')
+out = cv.VideoWriter('output_original.avi', fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
+
 while 1:
     ret, frame = cap.read()
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -32,11 +36,16 @@ while 1:
         c, d = old.ravel()
         frame = cv.circle(frame, (a, b), 4, (0, 255, 0), -1)
     cv.imshow('frame', frame)
+    if ret:
+        frame = cv.flip(frame, 0)
+        out.write(frame)
     k = cv.waitKey(30) & 0xff
     if k == 27:
         break
     # Now update the previous frame and previous points
     old_gray = frame_gray.copy()
     p0 = good_new.reshape(-1, 1, 2)
+
 cv.destroyAllWindows()
+out.release()
 cap.release()
